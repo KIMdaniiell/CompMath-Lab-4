@@ -27,13 +27,15 @@ def draw_polynomial_graph(x_values, function, str_representation):
 def draw_result(generated_x, generated_y, test_x, original_function, polynomial_function, str_representation):
     figure, axes = plt.subplots()
     axes.scatter(generated_x, generated_y, marker='o', edgecolors='black', label=str_representation)
+    # axes.plot(generated_x, [original_function(x) for x in generated_x], label=str_representation)
+    axes.plot(test_x, [original_function(x) for x in test_x], label=str_representation)
     axes.plot(test_x, [polynomial_function(x) for x in test_x], color="red", label="L(x)")
-    axes.plot(generated_x, [original_function(x) for x in generated_x], label=str_representation)
     axes.set_xlabel("Ось X")
     axes.set_ylabel("Ось Y")
     axes.legend(loc="upper left")
     axes.grid(True)
     return
+
 
 def show_graphs():
     plt.show()

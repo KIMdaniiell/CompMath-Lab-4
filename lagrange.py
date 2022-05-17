@@ -23,14 +23,8 @@ def interpolate():
     (x_values, y_values) = generate_dots(get_dots_number(), a, b, function)
     x_values, y_values = filer_invalid_dots(x_values, y_values)
 
-    '''for i in range(dot_count):
-        iolib.write_debug(str(x_values[i]) + "\t |\t" + str(x_values[i]) + "\n")'''
-
-    '''plots.draw_dots_graph(x_values, y_values, function.str_rep)
-    plots.draw_polynomial_graph(sorted([random.random()*(b-a)+a for i in range(100)]),
-                                get_polynomial(x_values, y_values), "L(x)")'''
     plots.draw_result(x_values, y_values,
-                      sorted([random.random()*(b-a)+a for i in range(100)]),
+                      sorted([random.random()*(b-a)+a for i in range(100)]+[a, b, a-0.1*abs(a), b+0.1*abs(b)]),
                       function.action, get_polynomial(x_values, y_values),
                       function.str_rep)
     plots.show_graphs()
