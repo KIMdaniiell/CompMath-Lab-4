@@ -23,8 +23,9 @@ def interpolate():
     (x_values, y_values) = generate_dots(get_dots_number(), a, b, function)
     x_values, y_values = filer_invalid_dots(x_values, y_values)
 
+
     plots.draw_result(x_values, y_values,
-                      sorted([random.random()*(b-a)+a for i in range(100)]+[a, b, a-0.1*abs(a), b+0.1*abs(b)]),
+                      sorted([random.random()*(b*1.1-a*0.9)+a*0.9 for i in range(100)]+[a, b, a-0.1*abs(a), b+0.1*abs(b)]),
                       function.action, get_polynomial(x_values, y_values),
                       function.str_rep)
     plots.show_graphs()
@@ -79,7 +80,8 @@ def filer_invalid_dots( x_values, y_values):
 
 
 def get_polynomial(x_values, y_values):
-    basic_polynomials = [get_basic_polynomial(x_values, i) for i in range(len(x_values))]
+    basic_polynomials = [get_basic_polynomial(x_values, i)
+                         for i in range(len(x_values))]
 
     def polynomial(x):
         sum = 0
