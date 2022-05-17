@@ -1,7 +1,7 @@
 import math
 import random
-import plotmanager
-import iomanager
+import plots
+import iolib
 
 
 class InterpolatableFunction:
@@ -17,38 +17,50 @@ def interpolate():
     functions = [InterpolatableFunction(i[1], i[0]) for i in actions]
 
     function = functions[get_function_number(functions)-1]
-    boundaries = {iomanager.get_digit("Введите границу a", iomanager.InputType.FLOAT),
-                  iomanager.get_digit("Введите границу b", iomanager.InputType.FLOAT)}
+    boundaries = {iolib.get_digit("Введите границу a", iolib.InputType.FLOAT),
+                  iolib.get_digit("Введите границу b", iolib.InputType.FLOAT)}
     a, b = min(boundaries), max(boundaries)
-    dot_count = 10
-
-    (x_values, y_values) = generate_dots(dot_count, a, b, function)
-    x_values, y_values = filer_invalid_dots(dot_count, x_values, y_values)
-    dot_count = len(x_values)
+    (x_values, y_values) = generate_dots(get_dots_number(), a, b, function)
+    x_values, y_values = filer_invalid_dots(x_values, y_values)
 
     '''for i in range(dot_count):
-        iomanager.write_debug(str(x_values[i]) + "\t |\t" + str(x_values[i]) + "\n")'''
+        iolib.write_debug(str(x_values[i]) + "\t |\t" + str(x_values[i]) + "\n")'''
 
-    plotmanager.get_dots_graph(x_values, y_values, function.str_rep)
-    new_x_values = [random.random()*(b-a)+a for i in range(100)]
-    new_x_values.sort()
-    plotmanager.get_polynomial_graph(new_x_values, get_polynomial(x_values, y_values), "L(x)")
-    plotmanager.show_graphs()
+    '''plots.draw_dots_graph(x_values, y_values, function.str_rep)
+    plots.draw_polynomial_graph(sorted([random.random()*(b-a)+a for i in range(100)]),
+                                get_polynomial(x_values, y_values), "L(x)")'''
+    plots.draw_result(x_values, y_values,
+                      sorted([random.random()*(b-a)+a for i in range(100)]),
+                      function.action, get_polynomial(x_values, y_values),
+                      function.str_rep)
+    plots.show_graphs()
 
 
 def get_function_number(functions):
-    iomanager.write_message("Выберите интегрируемую интерполируемую функцию:\n")
+    iolib.write_message("Выберите интегрируемую интерполируемую функцию:\n")
     number = 0
     functions = [f.str_rep for f in functions]
     for i in range(len(functions) - 1):
-        iomanager.write_message("\t" + str(i + 1) + ") " + str(functions[i]) + "\n")
-    iomanager.write_message("\t" + str(len(functions)) + ") " + str(functions[-1]))
+        iolib.write_message("\t" + str(i + 1) + ") " + str(functions[i]) + "\n")
+    iolib.write_message("\t" + str(len(functions)) + ") " + str(functions[-1]))
 
     is_valid = False
     while not is_valid:
-        number = iomanager.get_digit("Номер уравнения", iomanager.InputType.INTEGER)
+        number = iolib.get_digit("Номер уравнения", iolib.InputType.INTEGER)
         if number < 1 or number > len(functions):
-            iomanager.write_error("Функция с таким номером не найдена!")
+            iolib.write_error("Функция с таким номером не найдена!")
+        else:
+            is_valid = True
+    return number
+
+
+def get_dots_number():
+    number = 0
+    is_valid = False
+    while not is_valid:
+        number = iolib.get_digit("Количество генерируемых точек", iolib.InputType.INTEGER)
+        if number < 1:
+            iolib.write_error("Введенное значение слишком мало!")
         else:
             is_valid = True
     return number
@@ -61,15 +73,14 @@ def generate_dots(n, a, b, function):
     return [arguments, values]
 
 
-def filer_invalid_dots(counter, x_values, y_values):
-    iomanager.write_message("\n")
+def filer_invalid_dots( x_values, y_values):
+    iolib.write_message("\n")
     if y_values.count(None) >= 1:
-        iomanager.write_error("Выбранный интервал вышел за область допустимых значений функции. ")
-        iomanager.write_message("Часть сгенерированных точек будет потеряна!\n")
+        iolib.write_error("Выбранный интервал вышел за область допустимых значений функции. ")
+        iolib.write_message("Часть сгенерированных точек будет потеряна!\n")
         while y_values.count(None) >= 1:
             x_values.pop(y_values.index(None))
             y_values.pop(y_values.index(None))
-        iomanager.write_message("Сгенерированных точек осталось: " + str(counter - len(x_values))+"\n\n")
     return x_values, y_values
 
 
